@@ -70,10 +70,12 @@ const createPhotoDescription = (quantity) => {
 };
 
 const photosElement = document.querySelector(`.pictures`);
+// Находим шаблон и получаем содержимое шаблона типа documentFragment
 const photosTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 
 // Функция создаст DOM-элементы, соответствующие фотографиям и заполняет их данными
 const createPhotos = (photo) => {
+  // Копируем шаблон со всеми потомками в новую переменную
   const photoElement = photosTemplate.cloneNode(true);
 
   photoElement.querySelector(`.picture__img`).src = photo.url;
@@ -83,14 +85,62 @@ const createPhotos = (photo) => {
   return photoElement;
 };
 
-// Функция отрисует сгенерированные DOM-элементы
+// Функция отрисует сгенерированные DOM-элементы (25 фото)
 const createPicturesList = (photos) => {
+  // инициализируем новый фрагмент
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
     fragment.appendChild(createPhotos(photos[i]));
   }
-
+  // возвращает все сгенерированные DOM-элементы
   return fragment;
 };
-
+// отрисует все сгенерированные DOM-элементы
 photosElement.appendChild(createPicturesList(createPhotoDescription(25)));
+
+const commentsList = document.querySelector(`.social__comments`);
+const commentsItem = commentsList.querySelector(`.social__comment`);
+const bigPhotoElement = document.querySelector(`.big-picture`);
+
+// Функция создает один комментарий
+const createCommentItem = (comments) => {
+  const commentElement = commentsItem.cloneNode(true);
+
+  commentElement.querySelector(`.social__picture`).src = comments.avatar;
+  commentElement.querySelector(`.social__picture`).alt = comments.name;
+  commentElement.querySelector(`.social__text`).textContent = comments.message;
+
+  return commentElement;
+};
+
+// Функция отрисует сгенерированные DOM-элементы
+const createCommentsList = (comment) => {
+  commentsList.innerHTML = ``;
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < comment.length; i++) {
+    fragment.appendChild(createCommentItem(comment[i]));
+  }
+
+  commentsList.appendChild(fragment);
+};
+
+// Функция создаст DOM-элементы и заполнит их данными
+const renderBigPhotoElement = (photos) => {
+  bigPhotoElement.classList.remove(`hidden`);
+
+  bigPhotoElement.querySelector(`.big-picture__img`).querySelector(`img`).src = photos.url;
+  bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
+  bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
+  bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
+
+  bigPhotoElement.querySelector(`.social__comment-count`).classList.add(`hidden`);
+  bigPhotoElement.querySelector(`.comments-loader`).classList.add(`hidden`);
+
+  createCommentsList(photos.comments);
+};
+
+// отрисует большую фотографию
+renderBigPhotoElement(createPhotoDescription(25)[0]);
+
+// Добавляет класс, чтобы контейнер с фотографиями позади не прокручивался при скролле
+document.querySelector(`body`).classList.add(`modal-open`);
