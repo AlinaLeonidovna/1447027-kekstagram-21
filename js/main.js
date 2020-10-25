@@ -167,9 +167,7 @@ const createCommentsList = (comment) => {
 
 // Функция создаст DOM-элементы и заполнит их данными
 const renderBigPhotoElement = (photos) => {
-  bigPhotoElement.classList.remove(`hidden`);
-
-  bigPhotoElement.querySelector(`.big-picture__img`).querySelector(`img`).src = photos.url;
+  bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
   bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
   bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
   bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
@@ -180,13 +178,7 @@ const renderBigPhotoElement = (photos) => {
   createCommentsList(photos.comments);
 };
 
-// отрисует большую фотографию
 renderBigPhotoElement(createPhotoDescription(25)[0]);
-
-// Добавляет класс, чтобы контейнер с фотографиями позади не прокручивался при скролле
-document.querySelector(`body`).classList.add(`modal-open`);
-
-bigPhotoElement.classList.add(`hidden`);
 
 const uploadFormImg = document.querySelector(`.img-upload__form`);
 const uploadInputImg = uploadFormImg.querySelector(`#upload-file`);
@@ -198,23 +190,68 @@ const scaleControlSmaller = scaleControls.querySelector(`.scale__control--smalle
 const currentScaleValue = scaleControls.querySelector(`.scale__control--value`);
 const scaleControlBigger = scaleControls.querySelector(`.scale__control--bigger`);
 const hashtagsInput = uploadFormImg.querySelector(`.text__hashtags`);
+const commentInput = uploadFormImg.querySelector(`.text__description`);
 const effectBar = uploadFormImg.querySelector(`.effect-level`);
 const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
 const effectsRadio = document.querySelectorAll(`.effects__radio`);
 const effectLevelValue = document.querySelector(`.effect-level__value`);
+const closeButtonBigImg = bigPhotoElement.querySelector(`#picture-cancel`);
 
-// Загрузка изображения и показ формы редактирования
+// Просмотр любого изображения в полноэкранном режиме
 
-const onEditFormKeydownEsc = (evt) => {
+const onModalOpenKeydown = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     closeEditFormImg();
+    closeBigPhotoElement();
   }
 };
 
+const openBigPhotoElement = () => {
+  bigPhotoElement.classList.remove(`hidden`);
+  closeButtonBigImg.addEventListener(`click`, onModalOpenKeydown);
+  document.addEventListener(`keydown`, onModalOpenKeydown);
+  document.querySelector(`body`).classList.add(`modal-open`);
+};
+
+const closeBigPhotoElement = () => {
+  bigPhotoElement.classList.add(`hidden`);
+  closeButtonBigImg.removeEventListener(`click`, onModalOpenKeydown);
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
+  document.querySelector(`body`).classList.remove(`modal-open`);
+};
+
+const onPhotoElementClick = (evt) => {
+  if (evt.target && evt.target.matches(`img[class="picture__img"]`)) {
+    bigPhotoElement.querySelector(`.big-picture__img img`).src = evt.target.src;
+
+    openBigPhotoElement();
+  }
+};
+
+photosElement.addEventListener(`click`, onPhotoElementClick);
+
+// НЕ РАБОТАЕТ
+const onPhotoElementKeydown = (evt) => {
+  if (evt.key === `Enter`) {
+    for (let i = 0; i < photosTemplate.length; i++) {
+      let photo = photosTemplate[i];
+      if (photo === document.activeElement) {
+        bigPhotoElement.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
+
+        openBigPhotoElement();
+      }
+    }
+  }
+};
+
+photosElement.addEventListener(`keydown`, onPhotoElementKeydown);
+
+// Загрузка изображения и показ формы редактирования
+
 const openEditFormImg = () => {
   editFormImg.classList.remove(`hidden`);
-  document.addEventListener(`keydown`, onEditFormKeydownEsc);
+  document.addEventListener(`keydown`, onModalOpenKeydown);
   document.querySelector(`body`).classList.add(`modal-open`);
   scaleControlSmaller.addEventListener(`click`, onScaleValuePressingButtonSmaller);
   scaleControlBigger.addEventListener(`click`, onScaleValuePressingButtonBigger);
@@ -226,7 +263,7 @@ const openEditFormImg = () => {
 
 const closeEditFormImg = () => {
   editFormImg.classList.add(`hidden`);
-  document.removeEventListener(`keydown`, onEditFormKeydownEsc);
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
   uploadInputImg.value = ``;
   previewImg.style.transform = ``;
   currentScaleValue.value = 100 + `%`;
@@ -386,9 +423,19 @@ const onHashtagsInput = (evt) => {
 };
 
 hashtagsInput.addEventListener(`focus`, () => {
-  document.removeEventListener(`keydown`, onEditFormKeydownEsc);
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
 });
 
 hashtagsInput.addEventListener(`blur`, () => {
-  document.addEventListener(`keydown`, onEditFormKeydownEsc);
+  document.addEventListener(`keydown`, onModalOpenKeydown);
+});
+
+// Комментарий
+
+commentInput.addEventListener(`focus`, () => {
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
+});
+
+commentInput.addEventListener(`blur`, () => {
+  document.addEventListener(`keydown`, onModalOpenKeydown);
 });
