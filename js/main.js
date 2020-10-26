@@ -37,7 +37,7 @@ const NAMES = [
   `Костя`
 ];
 
-const Scale = {
+const ScaleParameters = {
   MIN_VALUE: 25,
   MAX_VALUE: 100,
   STEP: 25
@@ -71,7 +71,7 @@ const EFFECT_VALUES = {
   },
 };
 
-const Hashtags = {
+const HashtagsParameters = {
   MIN_LENGTH: 2,
   MAX_LENGTH: 20,
   MAX_QUANTITY: 5,
@@ -167,9 +167,7 @@ const createCommentsList = (comment) => {
 
 // Функция создаст DOM-элементы и заполнит их данными
 const renderBigPhotoElement = (photos) => {
-  bigPhotoElement.classList.remove(`hidden`);
-
-  bigPhotoElement.querySelector(`.big-picture__img`).querySelector(`img`).src = photos.url;
+  bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
   bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
   bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
   bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
@@ -180,85 +178,94 @@ const renderBigPhotoElement = (photos) => {
   createCommentsList(photos.comments);
 };
 
-// отрисует большую фотографию
 renderBigPhotoElement(createPhotoDescription(25)[0]);
 
-// Добавляет класс, чтобы контейнер с фотографиями позади не прокручивался при скролле
-document.querySelector(`body`).classList.add(`modal-open`);
-
-bigPhotoElement.classList.add(`hidden`);
-
-// Находим поле для загрузки нового изображения на сайт
 const uploadFormImg = document.querySelector(`.img-upload__form`);
-// Находим стандартный контрол загрузки файла
 const uploadInputImg = uploadFormImg.querySelector(`#upload-file`);
-// Находим форму редактирования изображения
 const editFormImg = uploadFormImg.querySelector(`.img-upload__overlay`);
-// Находим кнопку для закрытия формы редактирования изображения
 const closeButtonImg = uploadFormImg.querySelector(`#upload-cancel`);
-// Находим превью изображения
 const previewImg = uploadFormImg.querySelector(`.img-upload__preview`).querySelector(`img`);
 const scaleControls = uploadFormImg.querySelector(`.scale`);
-// Находим кнопку уменьшения масштаба
 const scaleControlSmaller = scaleControls.querySelector(`.scale__control--smaller`);
 const currentScaleValue = scaleControls.querySelector(`.scale__control--value`);
-// Находим кнопку увеличения масштаба
 const scaleControlBigger = scaleControls.querySelector(`.scale__control--bigger`);
-// Находим поле для ввода хэш-тегов
 const hashtagsInput = uploadFormImg.querySelector(`.text__hashtags`);
+const commentInput = uploadFormImg.querySelector(`.text__description`);
 const effectBar = uploadFormImg.querySelector(`.effect-level`);
-// Находим ползунок в слайдере
 const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
-// Находим все радиокнопки с эффектами
 const effectsRadio = document.querySelectorAll(`.effects__radio`);
 const effectLevelValue = document.querySelector(`.effect-level__value`);
+const closeButtonBigImg = bigPhotoElement.querySelector(`#picture-cancel`);
 
-// Загрузка изображения и показ формы редактирования
+// Просмотр любого изображения в полноэкранном режиме
 
-// Обработчик закрывает форму редактирования изображения после нажатия по клавише Esc
-const onEditFormKeydownEsc = (evt) => {
-  if (evt.keyCode === 27) {
-    // Отменяем действия по умолчанию
+const onModalOpenKeydown = (evt) => {
+  if (evt.key === `Escape`) {
     evt.preventDefault();
-    // Добавляем класс hidden, чтобы скрыть форму
-    editFormImg.classList.add(`hidden`);
-    // Удаляем класс modal-open
-    document.querySelector(`body`).classList.remove(`modal-open`);
+    closeEditFormImg();
+    closeBigPhotoElement();
   }
 };
 
-// Функция открывает форму редактирования изображения
-const openEditFormImg = () => {
-  // Удаляем класс hidden, который скрывал форму
-  editFormImg.classList.remove(`hidden`);
-  // Слушатель события на загрузку изображения
-  document.addEventListener(`keydown`, onEditFormKeydownEsc);
-  // Добавляет класс modal-open, чтобы контейнер с фотографиями позади не прокручивался при скролле
+const openBigPhotoElement = () => {
+  bigPhotoElement.classList.remove(`hidden`);
+  closeButtonBigImg.addEventListener(`click`, onModalOpenKeydown);
+  document.addEventListener(`keydown`, onModalOpenKeydown);
   document.querySelector(`body`).classList.add(`modal-open`);
-  // Сушатель события на уменьшение масштаба
+};
+
+const closeBigPhotoElement = () => {
+  bigPhotoElement.classList.add(`hidden`);
+  closeButtonBigImg.removeEventListener(`click`, onModalOpenKeydown);
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
+  document.querySelector(`body`).classList.remove(`modal-open`);
+};
+
+const onPhotoElementClick = (evt) => {
+  if (evt.target && evt.target.matches(`img[class="picture__img"]`)) {
+    bigPhotoElement.querySelector(`.big-picture__img img`).src = evt.target.src;
+
+    openBigPhotoElement();
+  }
+};
+
+photosElement.addEventListener(`click`, onPhotoElementClick);
+
+// НЕ РАБОТАЕТ
+const onPhotoElementKeydown = (evt) => {
+  if (evt.key === `Enter`) {
+    for (let i = 0; i < photosTemplate.length; i++) {
+      let photo = photosTemplate[i];
+      if (photo === document.activeElement) {
+        bigPhotoElement.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
+
+        openBigPhotoElement();
+      }
+    }
+  }
+};
+
+photosElement.addEventListener(`keydown`, onPhotoElementKeydown);
+
+// Загрузка изображения и показ формы редактирования
+
+const openEditFormImg = () => {
+  editFormImg.classList.remove(`hidden`);
+  document.addEventListener(`keydown`, onModalOpenKeydown);
+  document.querySelector(`body`).classList.add(`modal-open`);
   scaleControlSmaller.addEventListener(`click`, onScaleValuePressingButtonSmaller);
-  // Сушатель события на увеличение масштаба
   scaleControlBigger.addEventListener(`click`, onScaleValuePressingButtonBigger);
-  // Сушатель события на изменения значений формы редактирования изображения (делегирование)
   editFormImg.addEventListener(`change`, onEditFormImgChange);
-  // По умолчанию должен быть выбран эффект «Оригинал». При выборе эффекта «Оригинал» слайдер скрывается.
   effectBar.classList.add(`hidden`);
-  // Ловим событие mousedown на ползунке слайдера
   effectLevelPin.addEventListener(`mousedown`, onLevelPinMousedown);
-  // Слушатель события на ввод хеш-тегов
   hashtagsInput.addEventListener(`input`, onHashtagsInput);
 };
 
-// Функция закрывает форму редактирования изображения
 const closeEditFormImg = () => {
   editFormImg.classList.add(`hidden`);
-  document.removeEventListener(`keydown`, onEditFormKeydownEsc);
-  // сброс значения поля выбора файла
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
   uploadInputImg.value = ``;
-  // сброс до первоначального размера изображения
   previewImg.style.transform = ``;
-  // При переключении эффектов, уровень насыщенности сбрасывается до начального значения (100%):
-  // слайдер, CSS-стиль изображения и значение поля должны обновляться.
   currentScaleValue.value = 100 + `%`;
   previewImg.style.filter = ``;
   hashtagsInput.value = ``;
@@ -270,73 +277,53 @@ const closeEditFormImg = () => {
   document.querySelector(`body`).classList.remove(`modal-open`);
 };
 
-// Ловим событие change на контроле загрузки файла и в случае изменения значения поля
-// (выбора изображения), функция, переданная в обработчик откроет форму редактирования изображения
 uploadInputImg.addEventListener(`change`, (evt) => {
-  // Отменяем действия по умолчанию
   evt.preventDefault();
   openEditFormImg();
 });
 
-// Ловим событие click на кнопке для закрытия формы редактирования изображения и функция,
-// переданная в обработчик закроет форму редактирования изображения
 closeButtonImg.addEventListener(`click`, (evt) => {
-  // Отменяем действия по умолчанию
   evt.preventDefault();
   closeEditFormImg();
 });
 
 // Масштаб
 
-// Функция вернет текщее значение масштаба в виде целого числа
 const getСurrentScaleValue = () => {
   return parseInt(currentScaleValue.value, 10);
 };
 
 const getScaleRange = (value) => {
-  return Math.min(Scale.MAX_VALUE, Math.max(Scale.MIN_VALUE, value));
+  return Math.min(ScaleParameters.MAX_VALUE, Math.max(ScaleParameters.MIN_VALUE, value));
 };
 
-// Функция поменяет старое значение на новое в соответствии с нажатой кнопкой
 const calculateScale = (newValue) => {
-  // Новое значение шкалы
   const newScaleValue = getScaleRange(newValue);
-  // Поменяет текущее значение на новое в %
   currentScaleValue.value = `${newScaleValue}%`;
-  // Изображению добавится стиль CSS, который с помощью трансформации задаст масштаб
   previewImg.style.transform = `scale(${newScaleValue / 100})`;
 };
 
-// Обработчик события при нажатие на "-"
 const onScaleValuePressingButtonSmaller = () => {
-  calculateScale(getСurrentScaleValue() - Scale.STEP);
+  calculateScale(getСurrentScaleValue() - ScaleParameters.STEP);
 };
 
-// Обработчик события при нажатие на "+"
 const onScaleValuePressingButtonBigger = () => {
-  calculateScale(getСurrentScaleValue() + Scale.STEP);
+  calculateScale(getСurrentScaleValue() + ScaleParameters.STEP);
 };
 
 // Наложение эффекта на изображение
 
 const onEditFormImgChange = (evt) => {
-  // при каждом изменении значения формы редактирования изображения
-  // если это клик по радиобаттону
   if (evt.target.matches(`input[type="radio"]`)) {
-    // при изменении уровня интенсивности эффекта, CSS-стили картинки внутри .img-upload__preview обновляются
     previewImg.style.filter = ``;
-    // если значение соответствует none
     if (evt.target.matches(`input[value="none"]`)) {
-      // значит выбран эффект "Оригинал" и слайдер скрывается
       effectBar.classList.add(`hidden`);
     } else {
-      // иначе слайдер показывается
       effectBar.classList.remove(`hidden`);
     }
   }
 };
 
-// Удалит предыдущий эффект, перед добавлением нового
 const removeEffect = () => {
   const effects = Array.from(previewImg.classList);
   effects.forEach((effect) => {
@@ -346,14 +333,11 @@ const removeEffect = () => {
   });
 };
 
-// Функция применяет нужный фильтр к превью
 const applyEffect = (effectChecked) => {
   removeEffect();
-  // добавит превью класс соответствующий новому выбранному эффекту
   previewImg.classList.add(effectChecked);
 };
 
-// Сравниваем эффекты на соответствие по id и вызываем функцию, которая применит нужный фильтр, добавив нужный класс к превью
 const onEffectRadioClick = (evt) => {
   switch (evt.target.id) {
     case `effect-none`:
@@ -377,9 +361,7 @@ const onEffectRadioClick = (evt) => {
   }
 };
 
-// Перебираем все эффекты
 effectsRadio.forEach((effectRadio) => {
-  // функция вернет эффект, на котором было поймано событие click и добавит обработчик
   effectRadio.addEventListener(`click`, onEffectRadioClick);
 });
 
@@ -406,51 +388,54 @@ const onLevelPinMousedown = (evt) => {
 
 // Хэш-теги
 
-// Функция проверяет на совпадение хэш-тегов
 const checkDuplicateHashtags = (hashtagsArray, hashtag) => {
   const index = hashtagsArray.indexOf(hashtag) + 1;
   return hashtagsArray.indexOf(hashtag, index);
 };
 
-// Функция переберет массив, проверит каждый хэш-тег на соответствие ограничениям и выведет сообщение об ошибке
 const getResultValidation = (hashtagsArray) => {
   for (let hashtag of hashtagsArray) {
     if (hashtag[0] !== `#`) {
       hashtagsInput.setCustomValidity(`Хэш-тег начинается с символа # (решётка)`);
-    } else if (hashtag.length < Hashtags.MIN_LENGTH) {
-      hashtagsInput.setCustomValidity(`Хэш-тег не может состоять только из одной решётки. Ещё минимум ${Hashtags.MIN_LENGTH - hashtag.length} симв.`);
-    } else if (!Hashtags.REGISTER.test(hashtag)) {
+    } else if (hashtag.length < HashtagsParameters.MIN_LENGTH) {
+      hashtagsInput.setCustomValidity(`Хэш-тег не может состоять только из одной решётки. Ещё минимум ${HashtagsParameters.MIN_LENGTH - hashtag.length} симв.`);
+    } else if (!HashtagsParameters.REGISTER.test(hashtag)) {
       hashtagsInput.setCustomValidity(`Строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.`);
-    } else if (hashtag.length > Hashtags.MAX_LENGTH) {
-      hashtagsInput.setCustomValidity(`Максимальная длина одного хэш-тега ${Hashtags.MAX_LENGTH} символов, включая решётку. Удалите лишние ${hashtag.length - Hashtags.MAX_LENGTH} симв.`);
+    } else if (hashtag.length > HashtagsParameters.MAX_LENGTH) {
+      hashtagsInput.setCustomValidity(`Максимальная длина одного хэш-тега ${HashtagsParameters.MAX_LENGTH} символов, включая решётку. Удалите лишние ${hashtag.length - HashtagsParameters.MAX_LENGTH} симв.`);
     } else if (checkDuplicateHashtags(hashtagsArray, hashtag) !== -1) {
       hashtagsInput.setCustomValidity(`Один и тот же хэш-тег не может быть использован дважды`);
     } else {
       hashtagsInput.setCustomValidity(``);
     }
-    // Проверка валидности поля на каждый ввод символа
+
     hashtagsInput.reportValidity();
   }
 
-  if (hashtagsArray.length > Hashtags.MAX_QUANTITY) {
-    hashtagsInput.setCustomValidity(`Нельзя указать больше ${Hashtags.MAX_QUANTITY} хэш-тегов`);
+  if (hashtagsArray.length > HashtagsParameters.MAX_QUANTITY) {
+    hashtagsInput.setCustomValidity(`Нельзя указать больше ${HashtagsParameters.MAX_QUANTITY} хэш-тегов`);
   }
 };
 
-// Обработчик событий
 const onHashtagsInput = (evt) => {
-  // Переводим коллекцию в нижний регистр для поиска одинаковых хэш-тегов и разбиваем на массив по разделителю пробел
   const hashtagsArray = evt.target.value.toLowerCase().split(` `);
-  // Вызываем функцию для проверки на соответствие ограничениям
   getResultValidation(hashtagsArray);
 };
 
-// Запрет закрытия формы редактирования изображения при фокусе на поле для ввода хэш-тегов
 hashtagsInput.addEventListener(`focus`, () => {
-  document.removeEventListener(`keydown`, onEditFormKeydownEsc);
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
 });
 
-// Добавление закрытия формы редактирования изображения при отсутствии фокуса на поле для ввода хэш-тегов
 hashtagsInput.addEventListener(`blur`, () => {
-  document.addEventListener(`keydown`, onEditFormKeydownEsc);
+  document.addEventListener(`keydown`, onModalOpenKeydown);
+});
+
+// Комментарий
+
+commentInput.addEventListener(`focus`, () => {
+  document.removeEventListener(`keydown`, onModalOpenKeydown);
+});
+
+commentInput.addEventListener(`blur`, () => {
+  document.addEventListener(`keydown`, onModalOpenKeydown);
 });
