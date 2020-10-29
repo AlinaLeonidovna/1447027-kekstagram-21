@@ -7,34 +7,6 @@
     STEP: 25
   };
 
-  const EFFECT_VALUES = {
-    chrome: {
-      min: 0,
-      max: 1,
-      template: `grayscale({value})`
-    },
-    sepia: {
-      min: 0,
-      max: 1,
-      template: `sepia({value})`
-    },
-    marvin: {
-      min: 0,
-      max: 100,
-      template: `invert({value}%)`
-    },
-    phobos: {
-      min: 0,
-      max: 3,
-      template: `blur({value}px)`
-    },
-    heat: {
-      min: 1,
-      max: 3,
-      template: `brightness({value})`
-    },
-  };
-
   const uploadFormImg = document.querySelector(`.img-upload__form`);
 
   const previewImg = uploadFormImg.querySelector(`.img-upload__preview`).querySelector(`img`);
@@ -46,7 +18,6 @@
   const effectBar = uploadFormImg.querySelector(`.effect-level`);
   const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
   const effectsRadio = document.querySelectorAll(`.effects__radio`);
-  const effectLevelValue = document.querySelector(`.effect-level__value`);
 
   // Масштаб
 
@@ -126,27 +97,6 @@
     effectRadio.addEventListener(`click`, onEffectRadioClick);
   });
 
-  // Изменение глубины эффекта, накладываемого на изображение
-
-  const getEffectIntensity = (effectChecked) => {
-    if (effectChecked.value !== `none`) {
-      const min = EFFECT_VALUES[effectChecked.value].min;
-      const max = EFFECT_VALUES[effectChecked.value].max;
-      const template = EFFECT_VALUES[effectChecked.value].template;
-
-      const result = min + ((max - min) / 100 * effectLevelValue.value);
-      previewImg.style = `filter: ` + template.replace(`{value}`, result);
-    } else {
-      previewImg.style = null;
-    }
-  };
-
-  const onLevelPinMousedown = (evt) => {
-    evt.preventDefault();
-    const effectChecked = document.querySelector(`input[name=effect]:checked`);
-    getEffectIntensity(effectChecked);
-  };
-
   window.editor = {
     uploadFormImg,
     previewImg,
@@ -158,6 +108,5 @@
     onScaleValuePressingButtonSmaller,
     onScaleValuePressingButtonBigger,
     onEditFormImgChange,
-    onLevelPinMousedown
   };
 })();
