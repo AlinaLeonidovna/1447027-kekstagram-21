@@ -67,7 +67,7 @@
       if (!(currentPositionPin < 0 || currentPositionPin > widthEffectLevelLine)) {
         const newPositionPin = currentPositionPin * 100 / widthEffectLevelLine;
         effectLevelPin.style.left = `${currentPositionPin}px`;
-        effectLevelValue.value = Math.round(newPositionPin);
+        effectLevelValue.setAttribute(`value`, Math.round(newPositionPin));
         effectLevelDepth.style.width = `${Math.round(newPositionPin)}%`;
 
         const effectChecked = document.querySelector(`input[name=effect]:checked`);

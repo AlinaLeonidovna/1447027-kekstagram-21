@@ -54,7 +54,9 @@
   };
 
   //  отрисует все сгенерированные DOM-элементы
-  photosElement.appendChild(createPicturesList(window.data.createPhotoDescription(25)));
+  // photosElement.appendChild(createPicturesList(window.data.createPhotoDescription(25)));
+
+  window.backend.load(createPicturesList, window.backend.errorHandler);
 
   const commentsList = document.querySelector(`.social__comments`);
   const commentsItem = commentsList.querySelector(`.social__comment`);
