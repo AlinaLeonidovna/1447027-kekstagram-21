@@ -19,6 +19,7 @@
     window.validation.hashtagsInput.addEventListener(`input`, window.validation.onHashtagsInput);
     closeButtonImg.addEventListener(`click`, closeEditFormImg);
     window.editor.effectLevelPin.addEventListener(`mousedown`, window.filter.onMouseDown);
+    window.editor.uploadFormImg.addEventListener(`submit`, onUploadFormImgSubmit);
   };
 
   const closeEditFormImg = () => {
@@ -26,9 +27,10 @@
     document.removeEventListener(`keydown`, window.utils.onModalOpenKeydown);
     uploadInputImg.value = ``;
     window.editor.previewImg.style.transform = ``;
-    window.editor.currentScaleValue.value = 0 + `%`;
+    window.editor.currentScaleValue.value = 100 + `%`;
     window.editor.previewImg.style.filter = ``;
     window.validation.hashtagsInput.value = ``;
+    window.editor.uploadFormImg.reset();
     window.editor.scaleControlSmaller.removeEventListener(`click`, window.editor.onScaleValuePressingButtonSmaller);
     window.editor.scaleControlBigger.removeEventListener(`click`, window.editor.onScaleValuePressingButtonBigger);
     editFormImg.removeEventListener(`change`, window.editor.onEditFormImgChange);
@@ -37,12 +39,19 @@
     document.querySelector(`body`).classList.remove(`modal-open`);
     closeButtonImg.removeEventListener(`click`, closeEditFormImg);
     window.editor.effectLevelPin.removeEventListener(`mousedown`, window.filter.onMouseDown);
+    window.editor.uploadFormImg.removeEventListener(`submit`, onUploadFormImgSubmit);
   };
 
   uploadInputImg.addEventListener(`change`, (evt) => {
     evt.preventDefault();
     openEditFormImg();
   });
+
+  const onUploadFormImgSubmit = (evt) => {
+    evt.preventDefault();
+    window.backend.send(new FormData(window.editor.uploadFormImg), window.backend.showMessageSuccess, window.backend.showMessagError);
+    closeEditFormImg();
+  };
 
   window.form = {
     closeEditFormImg

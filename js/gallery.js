@@ -56,7 +56,17 @@
   //  отрисует все сгенерированные DOM-элементы
   // photosElement.appendChild(createPicturesList(window.data.createPhotoDescription(25)));
 
-  window.backend.load(createPicturesList, window.backend.errorHandler);
+  const onDataLoad = (data) => {
+    const picturesList = createPicturesList(data);
+
+    photosElement.append(picturesList);
+  };
+
+  const onLoadError = (error) => {
+    window.backend.errorHandler(error);
+  };
+
+  window.backend.load(onDataLoad, onLoadError);
 
   const commentsList = document.querySelector(`.social__comments`);
   const commentsItem = commentsList.querySelector(`.social__comment`);
@@ -87,19 +97,20 @@
   const closeButtonBigImg = bigPhotoElement.querySelector(`#picture-cancel`);
 
   // Функция создаст DOM-элементы и заполнит их данными
-  const renderBigPhotoElement = (photos) => {
-    bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
-    bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
-    bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
-    bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
+  // const renderBigPhotoElement = (photos) => {
+  // bigPhotoElement.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
+  // bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
+  //   bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
+  //   bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
+  //   bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
 
-    bigPhotoElement.querySelector(`.social__comment-count`).classList.add(`hidden`);
-    bigPhotoElement.querySelector(`.comments-loader`).classList.add(`hidden`);
+  //   bigPhotoElement.querySelector(`.social__comment-count`).classList.add(`hidden`);
+  //   bigPhotoElement.querySelector(`.comments-loader`).classList.add(`hidden`);
 
-    createCommentsList(photos.comments);
-  };
+  //   createCommentsList(photos.comments);
+  // };
 
-  renderBigPhotoElement(window.data.createPhotoDescription(25)[0]);
+  // renderBigPhotoElement(window.data.createPhotoDescription[0]);
 
   // Просмотр любого изображения в полноэкранном режиме
 
