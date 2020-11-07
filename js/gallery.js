@@ -19,7 +19,7 @@
   };
 
   const onPhotoElementClick = (evt) => {
-    if (evt.target && evt.target.matches(`img[class=picture__img]`)) {
+    if (evt.target && evt.target.matches(`img[class = picture__img]`)) {
       bigPhotoElement.querySelector(`.big-picture__img img`).src = evt.target.src;
 
       openBigPhotoElement();
@@ -101,24 +101,22 @@
   const closeButtonBigImg = bigPhotoElement.querySelector(`#picture-cancel`);
 
   // Функция создаст DOM-элементы и заполнит их данными
-  // const renderBigPhotoElement = (photos) => {
-  // bigPhotoElement.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
-  // bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
-  //   bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
-  //   bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
-  //   bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
+  const renderBigPhotoElement = (photos) => {
+    bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
+    bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
+    bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
+    bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
 
-  //   bigPhotoElement.querySelector(`.social__comment-count`).classList.add(`hidden`);
-  //   bigPhotoElement.querySelector(`.comments-loader`).classList.add(`hidden`);
+    bigPhotoElement.querySelector(`.social__comment-count`).classList.add(`hidden`);
+    bigPhotoElement.querySelector(`.comments-loader`).classList.add(`hidden`);
 
-  //   createCommentsList(photos.comments);
-  // };
-
-  // renderBigPhotoElement(window.data.createPhotoDescription[0]);
+    createCommentsList(photos.comments);
+  };
 
   // Просмотр любого изображения в полноэкранном режиме
 
   const openBigPhotoElement = () => {
+    renderBigPhotoElement(currentPicturesList[0]);
     bigPhotoElement.classList.remove(`hidden`);
     closeButtonBigImg.addEventListener(`click`, closeBigPhotoElement);
     document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);
@@ -136,6 +134,7 @@
     currentPicturesList,
     createPicturesList,
     createCommentsList,
-    closeBigPhotoElement
+    closeBigPhotoElement,
+    photosElement
   };
 })();

@@ -58,7 +58,7 @@
         filteredPhotos = createDefaultFilter();
     }
 
-    window.gallery.createPicturesList(filteredPhotos);
+    window.gallery.photosElement.append(window.gallery.createPicturesList(filteredPhotos));
   });
 
   filtersImg.addEventListener(`click`, onFiltersImgClick);
