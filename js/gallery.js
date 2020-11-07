@@ -56,10 +56,14 @@
   //  отрисует все сгенерированные DOM-элементы
   // photosElement.appendChild(createPicturesList(window.data.createPhotoDescription(25)));
 
+  let currentPicturesList = [];
+
   const onDataLoad = (data) => {
     const picturesList = createPicturesList(data);
 
     photosElement.append(picturesList);
+
+    currentPicturesList = data;
   };
 
   const onLoadError = (error) => {
@@ -129,6 +133,8 @@
   };
 
   window.gallery = {
+    currentPicturesList,
+    createPicturesList,
     createCommentsList,
     closeBigPhotoElement
   };

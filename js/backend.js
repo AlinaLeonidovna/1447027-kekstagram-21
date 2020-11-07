@@ -13,7 +13,6 @@
   const sectionMain = document.querySelector(`main`);
 
   const getResponseRequest = (xhr, onSuccess, onError) => {
-    // const xhr = new XMLHttpRequest();
 
     xhr.responseType = `json`;
 
@@ -53,9 +52,6 @@
     xhr.TIMEOUT = TIMEOUT_IN_MS;
 
     return xhr;
-
-    // xhr.open(`GET`, URL);
-    // xhr.send();
   };
 
   const load = (onSuccess, onError) => {
