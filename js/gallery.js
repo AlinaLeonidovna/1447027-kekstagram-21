@@ -16,21 +16,22 @@
     return photoElement;
   };
 
-  const onPhotoElementClick = (evt) => {
+  const onPhotoClick = (evt) => {
     if (evt.target && evt.target.matches(`img[class = picture__img]`)) {
-      bigPhotoElement.querySelector(`.big-picture__img img`).src = evt.target.src;
+      bigPhoto.querySelector(`.big-picture__img img`).src = evt.target.src;
 
-      openBigPhotoElement();
+      openBigPhoto();
     }
   };
 
-  const onPhotoElementKeydown = (evt) =>{
+  const onPhotoKeydown = (evt) =>{
     if (evt.key === `Enter`) {
       for (let i = 0; i < photosElement.length; i++) {
         const photo = photosElement[i];
         if (photo === document.activeElement) {
-          bigPhotoElement.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
-          openBigPhotoElement();
+          bigPhoto.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
+
+          openBigPhoto();
         }
       }
     }
@@ -43,8 +44,8 @@
       const createdPhoto = createPhotos(photos[i]);
       fragment.appendChild(createdPhoto);
 
-      createdPhoto.addEventListener(`click`, onPhotoElementClick);
-      createdPhoto.addEventListener(`keydown`, onPhotoElementKeydown);
+      createdPhoto.addEventListener(`click`, onPhotoClick);
+      createdPhoto.addEventListener(`keydown`, onPhotoKeydown);
     }
 
     return fragment;
@@ -87,34 +88,34 @@
     commentsList.appendChild(fragment);
   };
 
-  const bigPhotoElement = document.querySelector(`.big-picture`);
-  const closeButtonBigImg = bigPhotoElement.querySelector(`#picture-cancel`);
+  const bigPhoto = document.querySelector(`.big-picture`);
+  const closeButtonBigImg = bigPhoto.querySelector(`#picture-cancel`);
 
   // Функция создаст DOM-элементы и заполнит их данными
-  const renderBigPhotoElement = (photos) => {
-    bigPhotoElement.querySelector(`.big-picture__img img`).src = photos.url;
-    bigPhotoElement.querySelector(`.likes-count`).textContent = photos.likes;
-    bigPhotoElement.querySelector(`.social__caption`).textContent = photos.description;
-    bigPhotoElement.querySelector(`.comments-count`).textContent = photos.comments.length;
+  const renderBigPhoto = (photos) => {
+    bigPhoto.querySelector(`.big-picture__img img`).src = photos.url;
+    bigPhoto.querySelector(`.likes-count`).textContent = photos.likes;
+    bigPhoto.querySelector(`.social__caption`).textContent = photos.description;
+    bigPhoto.querySelector(`.comments-count`).textContent = photos.comments.length;
 
-    bigPhotoElement.querySelector(`.social__comment-count`).classList.add(`hidden`);
-    bigPhotoElement.querySelector(`.comments-loader`).classList.add(`hidden`);
+    bigPhoto.querySelector(`.social__comment-count`).classList.add(`hidden`);
+    bigPhoto.querySelector(`.comments-loader`).classList.add(`hidden`);
 
     createCommentsList(photos.comments);
   };
 
   // Просмотр любого изображения в полноэкранном режиме
-  const openBigPhotoElement = () => {
-    renderBigPhotoElement(currentPicturesList[0]);
-    bigPhotoElement.classList.remove(`hidden`);
-    closeButtonBigImg.addEventListener(`click`, closeBigPhotoElement);
+  const openBigPhoto = () => {
+    renderBigPhoto(currentPicturesList[0]);
+    bigPhoto.classList.remove(`hidden`);
+    closeButtonBigImg.addEventListener(`click`, closeBigPhoto);
     document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);
     document.querySelector(`body`).classList.add(`modal-open`);
   };
 
-  const closeBigPhotoElement = () => {
-    bigPhotoElement.classList.add(`hidden`);
-    closeButtonBigImg.removeEventListener(`click`, closeBigPhotoElement);
+  const closeBigPhoto = () => {
+    bigPhoto.classList.add(`hidden`);
+    closeButtonBigImg.removeEventListener(`click`, closeBigPhoto);
     document.removeEventListener(`keydown`, window.utils.onModalOpenKeydown);
     document.querySelector(`body`).classList.remove(`modal-open`);
   };
@@ -123,7 +124,7 @@
     currentPicturesList,
     createPicturesList,
     createCommentsList,
-    closeBigPhotoElement,
+    closeBigPhoto,
     photosElement
   };
 })();

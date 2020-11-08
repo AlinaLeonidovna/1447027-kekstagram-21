@@ -109,17 +109,17 @@
   };
 
   const showMessageSuccess = () => {
-    const messageElement = messageSuccessTemplate.cloneNode(true);
-    messageElement.querySelector(`h2`).textContent = `Изображение успешно загружено`;
-    messageElement.querySelector(`button`).textContent = `Круто!`;
-    renderMessage(messageElement, `success`);
+    const messageSuccess = messageSuccessTemplate.cloneNode(true);
+    messageSuccess.querySelector(`h2`).textContent = `Изображение успешно загружено`;
+    messageSuccess.querySelector(`button`).textContent = `Круто!`;
+    renderMessage(messageSuccess, `success`);
   };
 
   const showMessagError = () => {
-    const messageElement = messageErrorTemplate.cloneNode(true);
-    messageElement.querySelector(`h2`).textContent = `Ошибка загрузки файла`;
-    messageElement.querySelector(`button`).textContent = `Загрузить другой файл`;
-    renderMessage(messageElement, `error`);
+    const messageError = messageErrorTemplate.cloneNode(true);
+    messageError.querySelector(`h2`).textContent = `Ошибка загрузки файла`;
+    messageError.querySelector(`button`).textContent = `Загрузить другой файл`;
+    renderMessage(messageError, `error`);
   };
 
   window.backend = {
