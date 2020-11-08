@@ -14,6 +14,8 @@
     window.editor.scaleControlBigger.addEventListener(`click`, window.editor.onScaleValuePressingButtonBigger);
     editFormImg.addEventListener(`change`, window.editor.onEditFormImgChange);
     window.editor.effectBar.classList.add(`hidden`);
+    window.filter.effectLevelPin.style.left = `100%`;
+    window.filter.effectLevelDepth.style.width = `100%`;
     window.editor.effectLevelPin.addEventListener(`mousedown`, window.editor.onLevelPinMousedown);
     window.validation.hashtagsInput.addEventListener(`input`, window.validation.onHashtagsInput);
     closeButtonImg.addEventListener(`click`, closeEditFormImg);

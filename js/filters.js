@@ -3,17 +3,9 @@
 (() => {
   const filtersImg = document.querySelector(`.img-filters`);
 
-  filtersImg.classList.remove(`img-filters--inactive`);
-
   const changeActiveFilters = (button) => {
     filtersImg.querySelector(`.img-filters__button--active`).classList.remove(`img-filters__button--active`);
     button.classList.add(`img-filters__button--active`);
-  };
-
-  const removePicturesList = () => {
-    document.querySelectorAll(`.picture`).forEach((photo) => {
-      photo.remove();
-    });
   };
 
   const shufflePhotos = (photos) => {
@@ -23,44 +15,25 @@
       photos[j] = photos[i];
       photos[i] = element;
     }
+
     return photos;
   };
 
-  const createDefaultFilter = () => window.gallery.currentPicturesList;
-
-  const createRandomFilter = () => {
-    return shufflePhotos(window.gallery.currentPicturesList.slice().splice(0, 10));
-  };
-
-  const createDiscussedFilter = () => {
-    return window.gallery.currentPicturesList.slice().sort((first, second) => second.comments.length - first.comments.length);
+  const photosFilter = {
+    'filter-default': (photos) => photos.slice(),
+    'filter-random': (photos) => shufflePhotos(photos.slice().splice(0, 10)),
+    'filter-discussed': (photos) => photos.slice().sort((first, second) => second.comments.length - first.comments.length)
   };
 
   const onFiltersImgClick = window.debounce.debounce((evt) => {
     changeActiveFilters(evt.target);
-    removePicturesList();
 
-    let filteredPhotos = [];
-    switch (evt.target.id) {
-      case `filter-default`:
-        filteredPhotos = createDefaultFilter();
-        break;
-      case `filter-random`:
-        filteredPhotos = createRandomFilter();
-        break;
-      case `filter-discussed`:
-        filteredPhotos = createDiscussedFilter();
-        break;
+    const filter = photosFilter[evt.target.id];
+    const filtered = filter(window.gallery.getPictures());
 
-      default:
-        filteredPhotos = createDefaultFilter();
-    }
-
-    let newPhoto = filteredPhotos;
-
-    document.querySelector(`.pictures`).append(window.gallery.createPicturesList(newPhoto));
-
+    window.gallery.renderPhotos(filtered);
   });
 
+  filtersImg.classList.remove(`img-filters--inactive`);
   filtersImg.addEventListener(`click`, onFiltersImgClick);
 })();

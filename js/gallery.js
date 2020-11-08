@@ -3,10 +3,12 @@
 (() => {
   const photosElement = document.querySelector(`.pictures`);
   const photosTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
-  let currentPicturesList = [];
+  let pictures = [];
+  const bigPhoto = document.querySelector(`.big-picture`);
+  const closeButtonBigImg = bigPhoto.querySelector(`#picture-cancel`);
 
   // Функция создаст DOM-элементы, соответствующие фотографиям и заполняет их данными
-  const createPhotos = (photo) => {
+  const createPhoto = (photo) => {
     const photoElement = photosTemplate.cloneNode(true);
 
     photoElement.querySelector(`.picture__img`).src = photo.url;
@@ -16,45 +18,34 @@
     return photoElement;
   };
 
-  const onPhotoClick = (evt) => {
-    if (evt.target && evt.target.matches(`img[class = picture__img]`)) {
-      bigPhoto.querySelector(`.big-picture__img img`).src = evt.target.src;
-
-      openBigPhoto();
-    }
-  };
-
-  const onPhotoKeydown = (evt) =>{
-    if (evt.key === `Enter`) {
-      for (let i = 0; i < photosElement.length; i++) {
-        const photo = photosElement[i];
-        if (photo === document.activeElement) {
-          bigPhoto.querySelector(`.big-picture__img img`).src = photo.querySelector(`.big-picture__img img`).src;
-
-          openBigPhoto();
-        }
-      }
-    }
-  };
-
-  //  Функция отрисует сгенерированные DOM-элементы (25 фото)
+  //  Функция отрисует сгенерированные DOM-элементы
   const createPicturesList = (photos) => {
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
-      const createdPhoto = createPhotos(photos[i]);
+      const photo = photos[i];
+
+      const createdPhoto = createPhoto(photo);
       fragment.appendChild(createdPhoto);
 
-      createdPhoto.addEventListener(`click`, onPhotoClick);
-      createdPhoto.addEventListener(`keydown`, onPhotoKeydown);
+      createdPhoto.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        openBigPhoto(photo);
+      });
+
+      createdPhoto.addEventListener(`keydown`, (evt) => {
+        if (evt.key === `Enter`) {
+          evt.preventDefault();
+          openBigPhoto(photo);
+        }
+      });
     }
 
     return fragment;
   };
 
   const onDataLoad = (data) => {
-    const picturesList = createPicturesList(data);
-    photosElement.append(picturesList);
-    currentPicturesList = data;
+    pictures = data;
+    renderPhotos(pictures);
   };
 
   const onLoadError = (error) => {
@@ -64,7 +55,7 @@
   window.backend.load(onDataLoad, onLoadError);
 
   const commentsList = document.querySelector(`.social__comments`);
-  const commentsItem = commentsList.querySelector(`.social__comment`);
+  const commentsItem = commentsList.querySelector(`.social__comment`).cloneNode(true);
 
   // Функция создает один комментарий
   const createCommentItem = (comments) => {
@@ -84,33 +75,31 @@
     for (let i = 0; i < comment.length; i++) {
       fragment.appendChild(createCommentItem(comment[i]));
     }
-
     commentsList.appendChild(fragment);
   };
 
-  const bigPhoto = document.querySelector(`.big-picture`);
-  const closeButtonBigImg = bigPhoto.querySelector(`#picture-cancel`);
-
   // Функция создаст DOM-элементы и заполнит их данными
-  const renderBigPhoto = (photos) => {
-    bigPhoto.querySelector(`.big-picture__img img`).src = photos.url;
-    bigPhoto.querySelector(`.likes-count`).textContent = photos.likes;
-    bigPhoto.querySelector(`.social__caption`).textContent = photos.description;
-    bigPhoto.querySelector(`.comments-count`).textContent = photos.comments.length;
+  const renderBigPhoto = (photo) => {
+    bigPhoto.querySelector(`.big-picture__img img`).src = photo.url;
+    bigPhoto.querySelector(`.likes-count`).textContent = photo.likes;
+    bigPhoto.querySelector(`.social__caption`).textContent = photo.description;
+    bigPhoto.querySelector(`.comments-count`).textContent = photo.comments.length;
 
     bigPhoto.querySelector(`.social__comment-count`).classList.add(`hidden`);
     bigPhoto.querySelector(`.comments-loader`).classList.add(`hidden`);
 
-    createCommentsList(photos.comments);
+    bigPhoto.querySelector(`.social__comments`).childNodes.forEach((node) => node.remove());
+
+    createCommentsList(photo.comments);
   };
 
   // Просмотр любого изображения в полноэкранном режиме
-  const openBigPhoto = () => {
-    renderBigPhoto(currentPicturesList[0]);
+  const openBigPhoto = (photo) => {
     bigPhoto.classList.remove(`hidden`);
     closeButtonBigImg.addEventListener(`click`, closeBigPhoto);
     document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);
     document.querySelector(`body`).classList.add(`modal-open`);
+    renderBigPhoto(photo);
   };
 
   const closeBigPhoto = () => {
@@ -120,11 +109,16 @@
     document.querySelector(`body`).classList.remove(`modal-open`);
   };
 
+  const renderPhotos = (photos) => {
+    removePictures();
+    photosElement.append(createPicturesList(photos));
+  };
+
+  const removePictures = () => document.querySelectorAll(`.picture`).forEach((photo) => photo.remove());
+
   window.gallery = {
-    currentPicturesList,
-    createPicturesList,
-    createCommentsList,
+    getPictures: () => pictures.slice(),
+    renderPhotos,
     closeBigPhoto,
-    photosElement
   };
 })();

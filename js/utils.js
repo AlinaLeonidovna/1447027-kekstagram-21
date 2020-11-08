@@ -7,7 +7,7 @@
     if (evt.key === `Escape`) {
       evt.preventDefault();
       window.form.closeEditFormImg();
-      window.gallery.closeBigPhotoElement();
+      window.gallery.closeBigPhoto();
     }
   };
 

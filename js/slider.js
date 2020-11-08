@@ -87,6 +87,8 @@
 
   window.filter = {
     effectLevelValue,
+    effectLevelPin,
+    effectLevelDepth,
     onMouseDown
   };
 })();
