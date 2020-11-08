@@ -8,19 +8,16 @@
   };
 
   const uploadFormImg = document.querySelector(`.img-upload__form`);
-
   const previewImg = uploadFormImg.querySelector(`.img-upload__preview`).querySelector(`img`);
   const scaleControls = uploadFormImg.querySelector(`.scale`);
   const scaleControlSmaller = scaleControls.querySelector(`.scale__control--smaller`);
   const currentScaleValue = scaleControls.querySelector(`.scale__control--value`);
   const scaleControlBigger = scaleControls.querySelector(`.scale__control--bigger`);
-
   const effectBar = uploadFormImg.querySelector(`.effect-level`);
   const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
   const effectsRadio = document.querySelectorAll(`.effects__radio`);
 
   // Масштаб
-
   const getСurrentScaleValue = () => {
     return parseInt(currentScaleValue.value, 10);
   };
@@ -44,7 +41,6 @@
   };
 
   // Наложение эффекта на изображение
-
   const onEditFormImgChange = (evt) => {
     if (evt.target.matches(`input[type="radio"]`)) {
       previewImg.style.filter = ``;

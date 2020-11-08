@@ -6,7 +6,6 @@
   const closeButtonImg = window.editor.uploadFormImg.querySelector(`#upload-cancel`);
 
   // Загрузка изображения и показ формы редактирования
-
   const openEditFormImg = () => {
     editFormImg.classList.remove(`hidden`);
     document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);

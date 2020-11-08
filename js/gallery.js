@@ -1,14 +1,12 @@
 'use strict';
 
-// Модуль для отрисовки миниатюр и увеличенного изображения
 (() => {
   const photosElement = document.querySelector(`.pictures`);
-  // Находим шаблон и получаем содержимое шаблона типа documentFragment
   const photosTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
+  let currentPicturesList = [];
 
   // Функция создаст DOM-элементы, соответствующие фотографиям и заполняет их данными
   const createPhotos = (photo) => {
-    // Копируем шаблон со всеми потомками в новую переменную
     const photoElement = photosTemplate.cloneNode(true);
 
     photoElement.querySelector(`.picture__img`).src = photo.url;
@@ -40,7 +38,6 @@
 
   //  Функция отрисует сгенерированные DOM-элементы (25 фото)
   const createPicturesList = (photos) => {
-    //  инициализируем новый фрагмент
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < photos.length; i++) {
       const createdPhoto = createPhotos(photos[i]);
@@ -49,20 +46,13 @@
       createdPhoto.addEventListener(`click`, onPhotoElementClick);
       createdPhoto.addEventListener(`keydown`, onPhotoElementKeydown);
     }
-    //  возвращает все сгенерированные DOM-элементы
+
     return fragment;
   };
 
-  //  отрисует все сгенерированные DOM-элементы
-  // photosElement.appendChild(createPicturesList(window.data.createPhotoDescription(25)));
-
-  let currentPicturesList = [];
-
   const onDataLoad = (data) => {
     const picturesList = createPicturesList(data);
-
     photosElement.append(picturesList);
-
     currentPicturesList = data;
   };
 
@@ -114,7 +104,6 @@
   };
 
   // Просмотр любого изображения в полноэкранном режиме
-
   const openBigPhotoElement = () => {
     renderBigPhotoElement(currentPicturesList[0]);
     bigPhotoElement.classList.remove(`hidden`);

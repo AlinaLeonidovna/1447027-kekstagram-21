@@ -6,6 +6,13 @@
     POST: `https://21.javascript.pages.academy/kekstagram`
   };
 
+  const StatusCode = {
+    SUCCESS: 200,
+    BAD_REQUEST: 400,
+    NOT_FOUND: 404,
+    SERVER_ERROR: 500
+  };
+
   const TIMEOUT_IN_MS = 10000;
 
   const messageSuccessTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
@@ -13,23 +20,22 @@
   const sectionMain = document.querySelector(`main`);
 
   const getResponseRequest = (xhr, onSuccess, onError) => {
-
     xhr.responseType = `json`;
 
     xhr.addEventListener(`load`, function () {
       let error;
       switch (xhr.status) {
-        case 200:
+        case StatusCode.SUCCESS:
           onSuccess(xhr.response);
           break;
-        case 400:
+        case StatusCode.BAD_REQUEST:
           error = `Неверный запрос`;
           break;
-        case 404:
+        case StatusCode.NOT_FOUND:
           error = `Ничего не найдено`;
           break;
-        case 500:
-          error = `Внутренняя ошибка сервера`;
+        case StatusCode.SERVER_ERROR:
+          error = `Ошибка сервера`;
           break;
 
         default:

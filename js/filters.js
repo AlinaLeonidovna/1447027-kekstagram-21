@@ -2,7 +2,6 @@
 
 (() => {
   const filtersImg = document.querySelector(`.img-filters`);
-  const currentPicturesList = document.querySelectorAll(`.picture`);
 
   filtersImg.classList.remove(`img-filters--inactive`);
 
@@ -12,7 +11,7 @@
   };
 
   const removePicturesList = () => {
-    currentPicturesList.forEach((photo) => {
+    document.querySelectorAll(`.picture`).forEach((photo) => {
       photo.remove();
     });
   };
@@ -34,8 +33,7 @@
   };
 
   const createDiscussedFilter = () => {
-    return window.gallery.currentPicturesList.slice().sort((first, second) => second.comments.length - first.comments.length
-    );
+    return window.gallery.currentPicturesList.slice().sort((first, second) => second.comments.length - first.comments.length);
   };
 
   const onFiltersImgClick = window.debounce.debounce((evt) => {
@@ -58,7 +56,10 @@
         filteredPhotos = createDefaultFilter();
     }
 
-    window.gallery.photosElement.append(window.gallery.createPicturesList(filteredPhotos));
+    let newPhoto = filteredPhotos;
+
+    document.querySelector(`.pictures`).append(window.gallery.createPicturesList(newPhoto));
+
   });
 
   filtersImg.addEventListener(`click`, onFiltersImgClick);

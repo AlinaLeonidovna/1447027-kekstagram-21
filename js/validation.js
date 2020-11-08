@@ -12,7 +12,6 @@
   const commentInput = window.editor.uploadFormImg.querySelector(`.text__description`);
 
   // Хэш-теги
-
   const checkDuplicateHashtags = (hashtagsArray, hashtag) => {
     const index = hashtagsArray.indexOf(hashtag) + 1;
     return hashtagsArray.indexOf(hashtag, index);
@@ -56,7 +55,6 @@
   });
 
   // Комментарий
-
   commentInput.addEventListener(`focus`, () => {
     document.removeEventListener(`keydown`, window.gallery.onModalOpenKeydown);
   });
