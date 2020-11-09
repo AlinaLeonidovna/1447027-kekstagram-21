@@ -89,14 +89,14 @@
   const renderMessage = (message, type) => {
     sectionMain.appendChild(message);
 
-    const closeButtonMessag = sectionMain.querySelector(`.${type}__button`);
+    const closeButtonMessage = sectionMain.querySelector(`.${type}__button`);
 
     const closeMessageModal = () => {
       sectionMain.removeChild(message);
       document.removeEventListener(`keydown`, onDocumentKeydown);
     };
 
-    closeButtonMessag.addEventListener(`click`, closeMessageModal);
+    closeButtonMessage.addEventListener(`click`, closeMessageModal);
     document.addEventListener(`click`, closeMessageModal);
 
     const onDocumentKeydown = (evt) => {

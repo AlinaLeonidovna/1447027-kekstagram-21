@@ -7,6 +7,8 @@
     STEP: 25
   };
 
+  const EFFECT_DEFAULT_VALUE = `100%`;
+
   const uploadFormImg = document.querySelector(`.img-upload__form`);
   const previewImg = uploadFormImg.querySelector(`.img-upload__preview`).querySelector(`img`);
   const scaleControls = uploadFormImg.querySelector(`.scale`);
@@ -48,6 +50,8 @@
         effectBar.classList.add(`hidden`);
       } else {
         effectBar.classList.remove(`hidden`);
+        window.slider.effectLevelPin.style.left = EFFECT_DEFAULT_VALUE;
+        window.slider.effectLevelDepth.style.width = EFFECT_DEFAULT_VALUE;
       }
     }
   };
@@ -103,6 +107,6 @@
     effectLevelPin,
     onScaleValuePressingButtonSmaller,
     onScaleValuePressingButtonBigger,
-    onEditFormImgChange,
+    onEditFormImgChange
   };
 })();

@@ -85,7 +85,7 @@
     document.addEventListener(`mouseup`, onMouseUp);
   };
 
-  window.filter = {
+  window.slider = {
     effectLevelValue,
     effectLevelPin,
     effectLevelDepth,
