@@ -25,8 +25,6 @@
     editFormImg.classList.add(`hidden`);
     document.removeEventListener(`keydown`, window.utils.onModalOpenKeydown);
     uploadInputImg.value = ``;
-    window.editor.previewImg.style.transform = ``;
-    window.editor.previewImg.style.filter = ``;
     window.validation.hashtagsInput.value = ``;
     window.editor.scaleControlSmaller.removeEventListener(`click`, window.editor.onScaleValuePressingButtonSmaller);
     window.editor.scaleControlBigger.removeEventListener(`click`, window.editor.onScaleValuePressingButtonBigger);
@@ -36,6 +34,12 @@
     closeButtonImg.removeEventListener(`click`, closeEditFormImg);
     window.editor.effectLevelPin.removeEventListener(`mousedown`, window.slider.onMouseDown);
     window.editor.uploadFormImg.removeEventListener(`submit`, onUploadFormImgSubmit);
+    resetToDefault();
+  };
+
+  const resetToDefault = () => {
+    window.editor.previewImg.className = ``;
+    window.editor.previewImg.style.transform = ``;
     window.editor.uploadFormImg.reset();
   };
 
