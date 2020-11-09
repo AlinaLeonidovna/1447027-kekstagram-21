@@ -6,6 +6,11 @@
   let pictures = [];
   const bigPhoto = document.querySelector(`.big-picture`);
   const closeButtonBigImg = bigPhoto.querySelector(`#picture-cancel`);
+  const commentsList = document.querySelector(`.social__comments`);
+  const commentsItem = commentsList.querySelector(`.social__comment`);
+  const commentsLoader = document.querySelector(`.comments-loader`);
+  let currentComments = [];
+  const COMMENTS_INDEX_STEP = 5;
 
   // Функция создаст DOM-элементы, соответствующие фотографиям и заполняет их данными
   const createPhoto = (photo) => {
@@ -54,9 +59,6 @@
 
   window.backend.load(onDataLoad, onLoadError);
 
-  const commentsList = document.querySelector(`.social__comments`);
-  const commentsItem = commentsList.querySelector(`.social__comment`).cloneNode(true);
-
   // Функция создает один комментарий
   const createCommentItem = (comments) => {
     const commentElement = commentsItem.cloneNode(true);
@@ -69,13 +71,17 @@
   };
 
   // Функция отрисует сгенерированные DOM-элементы
-  const createCommentsList = (comment) => {
-    commentsList.innerHTML = ``;
+  const createCommentsList = (comments) => {
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < comment.length; i++) {
-      fragment.appendChild(createCommentItem(comment[i]));
+    for (let comment of comments) {
+      fragment.appendChild(createCommentItem(comment));
     }
-    commentsList.appendChild(fragment);
+
+    return fragment;
+  };
+
+  const renderCommentsLimitedList = (comments) => {
+    commentsList.appendChild(createCommentsList(comments));
   };
 
   // Функция создаст DOM-элементы и заполнит их данными
@@ -93,13 +99,39 @@
     createCommentsList(photo.comments);
   };
 
+  let quantityRenderedComments;
+
+  const addComments = () => {
+    quantityRenderedComments = quantityRenderedComments + COMMENTS_INDEX_STEP;
+    renderCommentsLimitedList(currentComments.slice(quantityRenderedComments - COMMENTS_INDEX_STEP, quantityRenderedComments));
+
+    if (quantityRenderedComments >= currentComments.length) {
+      commentsLoader.removeEventListener(`click`, onButtonLoadComments);
+      commentsLoader.classList.add(`hidden`);
+    }
+
+
+  };
+
+  const onButtonLoadComments = () => {
+    addComments();
+  };
+
   // Просмотр любого изображения в полноэкранном режиме
   const openBigPhoto = (photo) => {
     bigPhoto.classList.remove(`hidden`);
     closeButtonBigImg.addEventListener(`click`, closeBigPhoto);
     document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);
     document.querySelector(`body`).classList.add(`modal-open`);
+    commentsLoader.addEventListener(`click`, onButtonLoadComments);
+    if (photo.comments.length > COMMENTS_INDEX_STEP) {
+      commentsLoader.classList.remove(`hidden`);
+    }
+    commentsList.innerHTML = ``;
     renderBigPhoto(photo);
+    currentComments = photo.comments.slice();
+    quantityRenderedComments = 0;
+    addComments();
   };
 
   const closeBigPhoto = () => {
