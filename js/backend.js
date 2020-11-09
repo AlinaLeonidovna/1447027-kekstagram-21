@@ -6,6 +6,13 @@
     POST: `https://21.javascript.pages.academy/kekstagram`
   };
 
+  const StatusCode = {
+    SUCCESS: 200,
+    BAD_REQUEST: 400,
+    NOT_FOUND: 404,
+    SERVER_ERROR: 500
+  };
+
   const TIMEOUT_IN_MS = 10000;
 
   const messageSuccessTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
@@ -13,24 +20,22 @@
   const sectionMain = document.querySelector(`main`);
 
   const getResponseRequest = (xhr, onSuccess, onError) => {
-    // const xhr = new XMLHttpRequest();
-
     xhr.responseType = `json`;
 
     xhr.addEventListener(`load`, function () {
       let error;
       switch (xhr.status) {
-        case 200:
+        case StatusCode.SUCCESS:
           onSuccess(xhr.response);
           break;
-        case 400:
+        case StatusCode.BAD_REQUEST:
           error = `Неверный запрос`;
           break;
-        case 404:
+        case StatusCode.NOT_FOUND:
           error = `Ничего не найдено`;
           break;
-        case 500:
-          error = `Внутренняя ошибка сервера`;
+        case StatusCode.SERVER_ERROR:
+          error = `Ошибка сервера`;
           break;
 
         default:
@@ -53,9 +58,6 @@
     xhr.TIMEOUT = TIMEOUT_IN_MS;
 
     return xhr;
-
-    // xhr.open(`GET`, URL);
-    // xhr.send();
   };
 
   const load = (onSuccess, onError) => {
@@ -87,14 +89,14 @@
   const renderMessage = (message, type) => {
     sectionMain.appendChild(message);
 
-    const closeButtonMessag = sectionMain.querySelector(`.${type}__button`);
+    const closeButtonMessage = sectionMain.querySelector(`.${type}__button`);
 
     const closeMessageModal = () => {
       sectionMain.removeChild(message);
       document.removeEventListener(`keydown`, onDocumentKeydown);
     };
 
-    closeButtonMessag.addEventListener(`click`, closeMessageModal);
+    closeButtonMessage.addEventListener(`click`, closeMessageModal);
     document.addEventListener(`click`, closeMessageModal);
 
     const onDocumentKeydown = (evt) => {
@@ -107,17 +109,17 @@
   };
 
   const showMessageSuccess = () => {
-    const messageElement = messageSuccessTemplate.cloneNode(true);
-    messageElement.querySelector(`h2`).textContent = `Изображение успешно загружено`;
-    messageElement.querySelector(`button`).textContent = `Круто!`;
-    renderMessage(messageElement, `success`);
+    const messageSuccess = messageSuccessTemplate.cloneNode(true);
+    messageSuccess.querySelector(`h2`).textContent = `Изображение успешно загружено`;
+    messageSuccess.querySelector(`button`).textContent = `Круто!`;
+    renderMessage(messageSuccess, `success`);
   };
 
   const showMessagError = () => {
-    const messageElement = messageErrorTemplate.cloneNode(true);
-    messageElement.querySelector(`h2`).textContent = `Ошибка загрузки файла`;
-    messageElement.querySelector(`button`).textContent = `Загрузить другой файл`;
-    renderMessage(messageElement, `error`);
+    const messageError = messageErrorTemplate.cloneNode(true);
+    messageError.querySelector(`h2`).textContent = `Ошибка загрузки файла`;
+    messageError.querySelector(`button`).textContent = `Загрузить другой файл`;
+    renderMessage(messageError, `error`);
   };
 
   window.backend = {

@@ -7,20 +7,19 @@
     STEP: 25
   };
 
-  const uploadFormImg = document.querySelector(`.img-upload__form`);
+  const EFFECT_DEFAULT_VALUE = `100%`;
 
+  const uploadFormImg = document.querySelector(`.img-upload__form`);
   const previewImg = uploadFormImg.querySelector(`.img-upload__preview`).querySelector(`img`);
   const scaleControls = uploadFormImg.querySelector(`.scale`);
   const scaleControlSmaller = scaleControls.querySelector(`.scale__control--smaller`);
   const currentScaleValue = scaleControls.querySelector(`.scale__control--value`);
   const scaleControlBigger = scaleControls.querySelector(`.scale__control--bigger`);
-
   const effectBar = uploadFormImg.querySelector(`.effect-level`);
   const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
   const effectsRadio = document.querySelectorAll(`.effects__radio`);
 
   // Масштаб
-
   const getСurrentScaleValue = () => {
     return parseInt(currentScaleValue.value, 10);
   };
@@ -44,7 +43,6 @@
   };
 
   // Наложение эффекта на изображение
-
   const onEditFormImgChange = (evt) => {
     if (evt.target.matches(`input[type="radio"]`)) {
       previewImg.style.filter = ``;
@@ -52,6 +50,8 @@
         effectBar.classList.add(`hidden`);
       } else {
         effectBar.classList.remove(`hidden`);
+        window.slider.effectLevelPin.style.left = EFFECT_DEFAULT_VALUE;
+        window.slider.effectLevelDepth.style.width = EFFECT_DEFAULT_VALUE;
       }
     }
   };
@@ -107,6 +107,6 @@
     effectLevelPin,
     onScaleValuePressingButtonSmaller,
     onScaleValuePressingButtonBigger,
-    onEditFormImgChange,
+    onEditFormImgChange
   };
 })();
