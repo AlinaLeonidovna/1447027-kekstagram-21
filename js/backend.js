@@ -1,6 +1,11 @@
 'use strict';
 
 (() => {
+  const Method = {
+    GET: `GET`,
+    POST: `POST`
+  };
+
   const Url = {
     GET: `https://21.javascript.pages.academy/kekstagram/data`,
     POST: `https://21.javascript.pages.academy/kekstagram`
@@ -62,14 +67,14 @@
 
   const load = (onSuccess, onError) => {
     const xhr = new XMLHttpRequest();
-    xhr.open(`GET`, Url.GET);
+    xhr.open(Method.GET, Url.GET);
     getResponseRequest(xhr, onSuccess, onError);
     xhr.send();
   };
 
   const send = function (data, onSuccess, onError) {
     const xhr = new XMLHttpRequest();
-    xhr.open(`POST`, Url.POST);
+    xhr.open(Method.POST, Url.POST);
     getResponseRequest(xhr, onSuccess, onError);
     xhr.send(data);
   };

@@ -2,6 +2,7 @@
 
 (() => {
   const filtersImg = document.querySelector(`.img-filters`);
+  const MAX_UNIQUE_PHOTOS = 10;
 
   const changeActiveFilters = (button) => {
     filtersImg.querySelector(`.img-filters__button--active`).classList.remove(`img-filters__button--active`);
@@ -21,7 +22,7 @@
 
   const photosFilter = {
     'filter-default': (photos) => photos.slice(),
-    'filter-random': (photos) => shufflePhotos(photos.slice().splice(0, 10)),
+    'filter-random': (photos) => shufflePhotos(photos.slice().splice(0, MAX_UNIQUE_PHOTOS)),
     'filter-discussed': (photos) => photos.slice().sort((first, second) => second.comments.length - first.comments.length)
   };
 
