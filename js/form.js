@@ -46,6 +46,7 @@
   uploadInputImg.addEventListener(`change`, (evt) => {
     evt.preventDefault();
     openEditFormImg();
+    window.uploadFile.onfileUpload();
   });
 
   const onUploadFormImgSubmit = (evt) => {
@@ -54,8 +55,5 @@
     closeEditFormImg();
   };
 
-  window.form = {
-    closeEditFormImg
-  };
-
+  window.form = closeEditFormImg;
 })();
