@@ -38,6 +38,12 @@ const getResultValidation = (hashtagsArray) => {
   if (hashtagsArray.length > HashtagsParameters.MAX_QUANTITY) {
     hashtagsInput.setCustomValidity(`Нельзя указать больше ${HashtagsParameters.MAX_QUANTITY} хэш-тегов`);
   }
+
+  if (!hashtagsInput.validity.valid) {
+    hashtagsInput.style.outlineColor = `red`;
+  } else {
+    hashtagsInput.style.outlineColor = `black`;
+  }
 };
 
 const onHashtagsInput = (evt) => {
