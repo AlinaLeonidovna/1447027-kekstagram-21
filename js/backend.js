@@ -98,10 +98,8 @@ const renderMessage = (message, type) => {
   const closeMessageModal = () => {
     sectionMain.removeChild(message);
     document.removeEventListener(`keydown`, onDocumentKeydown);
+    document.removeEventListener(`click`, onMessageModalClick);
   };
-
-  closeButtonMessage.addEventListener(`click`, closeMessageModal);
-  document.addEventListener(`click`, closeMessageModal);
 
   const onDocumentKeydown = (evt) => {
     if (evt.key === `Escape`) {
@@ -109,7 +107,18 @@ const renderMessage = (message, type) => {
     }
   };
 
+  const onMessageModalClick = ({target}) => {
+    if (target.className === type) {
+      closeMessageModal();
+    }
+  };
+
+  closeButtonMessage.addEventListener(`click`, () => {
+    closeMessageModal();
+  });
+
   document.addEventListener(`keydown`, onDocumentKeydown);
+  document.addEventListener(`click`, onMessageModalClick);
 };
 
 const showMessageSuccess = () => {

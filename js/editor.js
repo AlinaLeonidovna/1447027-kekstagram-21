@@ -9,7 +9,7 @@ const ScaleParameters = {
 const EFFECT_DEFAULT_VALUE = `100%`;
 
 const uploadFormImg = document.querySelector(`.img-upload__form`);
-const previewImg = uploadFormImg.querySelector(`.img-upload__preview`).querySelector(`img`);
+const previewImg = uploadFormImg.querySelector(`.img-upload__preview img`);
 const scaleControls = uploadFormImg.querySelector(`.scale`);
 const scaleControlSmaller = scaleControls.querySelector(`.scale__control--smaller`);
 const currentScaleValue = scaleControls.querySelector(`.scale__control--value`);
@@ -18,7 +18,6 @@ const effectBar = uploadFormImg.querySelector(`.effect-level`);
 const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
 const effectsRadio = document.querySelectorAll(`.effects__radio`);
 
-// Масштаб
 const getСurrentScaleValue = () => {
   return parseInt(currentScaleValue.value, 10);
 };
@@ -41,7 +40,6 @@ const onScaleValuePressingButtonBigger = () => {
   calculateScale(getСurrentScaleValue() + ScaleParameters.STEP);
 };
 
-// Наложение эффекта на изображение
 const onEditFormImgChange = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     previewImg.style.filter = ``;
