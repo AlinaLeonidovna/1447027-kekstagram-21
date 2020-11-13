@@ -49,12 +49,12 @@ const getEffectIntensity = (effectChecked) => {
   }
 };
 
-const onMouseDown = (evt) => {
+const onSliderPinMouseDown = (evt) => {
   evt.preventDefault();
 
   let startCoordX = evt.clientX;
 
-  const onMouseMove = (moveEvt) => {
+  const onSliderPinMouseMove = (moveEvt) => {
     moveEvt.preventDefault();
     const shiftX = startCoordX - moveEvt.clientX;
     startCoordX = moveEvt.clientX;
@@ -74,20 +74,20 @@ const onMouseDown = (evt) => {
     }
   };
 
-  const onMouseUp = function (upEvt) {
+  const onSliderPinMouseUp = function (upEvt) {
     upEvt.preventDefault();
-    document.removeEventListener(`mousemove`, onMouseMove);
-    document.removeEventListener(`mouseup`, onMouseUp);
+    document.removeEventListener(`mousemove`, onSliderPinMouseMove);
+    document.removeEventListener(`mouseup`, onSliderPinMouseUp);
   };
 
-  document.addEventListener(`mousemove`, onMouseMove);
-  document.addEventListener(`mouseup`, onMouseUp);
+  document.addEventListener(`mousemove`, onSliderPinMouseMove);
+  document.addEventListener(`mouseup`, onSliderPinMouseUp);
 };
 
 window.slider = {
   effectLevelValue,
   effectLevelPin,
   effectLevelDepth,
-  onMouseDown
+  onSliderPinMouseDown
 };
 

@@ -10,7 +10,6 @@ const HashtagsParameters = {
 const hashtagsInput = window.editor.uploadFormImg.querySelector(`.text__hashtags`);
 const commentInput = window.editor.uploadFormImg.querySelector(`.text__description`);
 
-// Хэш-теги
 const checkDuplicateHashtags = (hashtagsArray, hashtag) => {
   const index = hashtagsArray.indexOf(hashtag) + 1;
   return hashtagsArray.indexOf(hashtag, index);
@@ -42,7 +41,7 @@ const getResultValidation = (hashtagsArray) => {
   if (!hashtagsInput.validity.valid) {
     hashtagsInput.style.outlineColor = `red`;
   } else {
-    hashtagsInput.style.outlineColor = `black`;
+    hashtagsInput.style.outlineColor = `highlight`;
   }
 };
 
@@ -52,23 +51,42 @@ const onHashtagsInput = (evt) => {
 };
 
 hashtagsInput.addEventListener(`focus`, () => {
-  document.removeEventListener(`keydown`, window.gallery.onModalOpenKeydown);
+  document.removeEventListener(`keydown`, window.utils.onModalOpenKeydown);
 });
 
 hashtagsInput.addEventListener(`blur`, () => {
-  document.addEventListener(`keydown`, window.gallery.onModalOpenKeydown);
+  document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);
 });
 
-// Комментарий
+
+const onCommentInput = (evt) => {
+  const comment = evt.target.value.split(` `);
+  if (comment.length > 140) {
+    commentInput.setCustomValidity(`Комментарий не может состоять больше 140 символов`);
+  } else {
+    commentInput.setCustomValidity(``);
+  }
+
+  commentInput.reportValidity();
+
+  if (!commentInput.validity.valid) {
+    commentInput.style.outlineColor = `red`;
+  } else {
+    commentInput.style.outlineColor = `highlight`;
+  }
+};
+
 commentInput.addEventListener(`focus`, () => {
-  document.removeEventListener(`keydown`, window.gallery.onModalOpenKeydown);
+  document.removeEventListener(`keydown`, window.utils.onModalOpenKeydown);
 });
 
 commentInput.addEventListener(`blur`, () => {
-  document.addEventListener(`keydown`, window.gallery.onModalOpenKeydown);
+  document.addEventListener(`keydown`, window.utils.onModalOpenKeydown);
 });
 
 window.validation = {
   hashtagsInput,
-  onHashtagsInput
+  commentInput,
+  onHashtagsInput,
+  onCommentInput
 };

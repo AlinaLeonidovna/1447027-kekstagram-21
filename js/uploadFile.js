@@ -3,7 +3,7 @@
 const FILE_TYPES = [`gif`, `jpg`, `jpeg`, `png`];
 
 const uploadInputImg = document.querySelector(`#upload-file[type=file]`);
-const previewImg = document.querySelector(`.img-upload__preview`).querySelector(`img`);
+const previewImg = document.querySelector(`.img-upload__preview img`);
 const previewEffects = document.querySelectorAll(`.effects__preview`);
 
 const onfileUpload = () => {

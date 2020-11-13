@@ -1,6 +1,6 @@
 'use strict';
 
-const photosElement = document.querySelector(`.pictures`);
+const photosContainer = document.querySelector(`.pictures`);
 const photosTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 let pictures = [];
 const bigPhoto = document.querySelector(`.big-picture`);
@@ -11,7 +11,6 @@ const commentsLoader = document.querySelector(`.comments-loader`);
 let currentComments = [];
 const COMMENTS_INDEX_STEP = 5;
 
-// Функция создаст DOM-элементы, соответствующие фотографиям и заполняет их данными
 const createPhoto = (photo) => {
   const photoElement = photosTemplate.cloneNode(true);
 
@@ -22,7 +21,6 @@ const createPhoto = (photo) => {
   return photoElement;
 };
 
-//  Функция отрисует сгенерированные DOM-элементы
 const createPicturesList = (photos) => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
@@ -58,7 +56,6 @@ const onLoadError = (error) => {
 
 window.backend.load(onDataLoad, onLoadError);
 
-// Функция создает один комментарий
 const createCommentItem = (comments) => {
   const commentElement = commentsItem.cloneNode(true);
 
@@ -69,7 +66,6 @@ const createCommentItem = (comments) => {
   return commentElement;
 };
 
-// Функция отрисует сгенерированные DOM-элементы
 const createCommentsList = (comments) => {
   const fragment = document.createDocumentFragment();
   for (let comment of comments) {
@@ -83,7 +79,6 @@ const renderCommentsLimitedList = (comments) => {
   commentsList.appendChild(createCommentsList(comments));
 };
 
-// Функция создаст DOM-элементы и заполнит их данными
 const renderBigPhoto = (photo) => {
   bigPhoto.querySelector(`.big-picture__img img`).src = photo.url;
   bigPhoto.querySelector(`.likes-count`).textContent = photo.likes;
@@ -114,7 +109,6 @@ const onButtonLoadComments = () => {
   addComments();
 };
 
-// Просмотр любого изображения в полноэкранном режиме
 const openBigPhoto = (photo) => {
   bigPhoto.classList.remove(`hidden`);
   closeButtonBigImg.addEventListener(`click`, closeBigPhoto);
@@ -140,7 +134,7 @@ const closeBigPhoto = () => {
 
 const renderPhotos = (photos) => {
   removePictures();
-  photosElement.append(createPicturesList(photos));
+  photosContainer.append(createPicturesList(photos));
 };
 
 const removePictures = () => document.querySelectorAll(`.picture`).forEach((photo) => photo.remove());
