@@ -16,7 +16,7 @@ const openEditFormImg = () => {
   window.validation.hashtagsInput.addEventListener(`input`, window.validation.onHashtagsInput);
   window.validation.commentInput.addEventListener(`input`, window.validation.onCommentInput);
   closeButtonImg.addEventListener(`click`, closeEditFormImg);
-  window.editor.effectLevelPin.addEventListener(`mousedown`, window.slider.onSliderPinMouseDown);
+  // window.editor.effectLevelPin.addEventListener(`mousedown`, window.slider.onSliderPinMouseDown);
   window.editor.uploadFormImg.addEventListener(`submit`, onUploadFormImgSubmit);
 };
 
@@ -34,7 +34,7 @@ const closeEditFormImg = () => {
   window.validation.commentInput.removeEventListener(`input`, window.validation.onCommentInput);
   document.querySelector(`body`).classList.remove(`modal-open`);
   closeButtonImg.removeEventListener(`click`, closeEditFormImg);
-  window.editor.effectLevelPin.removeEventListener(`mousedown`, window.slider.onSliderPinMouseDown);
+  // window.editor.effectLevelPin.removeEventListener(`mousedown`, window.slider.onSliderPinMouseDown);
   window.editor.uploadFormImg.removeEventListener(`submit`, onUploadFormImgSubmit);
   window.editor.uploadFormImg.reset();
 };
