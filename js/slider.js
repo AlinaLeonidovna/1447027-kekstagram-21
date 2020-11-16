@@ -34,8 +34,6 @@ const effectLevelLine = effectBar.querySelector(`.effect-level__line`);
 const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
 const effectLevelDepth = effectBar.querySelector(`.effect-level__depth`);
 
-// Изменение глубины эффекта, накладываемого на изображение
-
 const getEffectIntensity = (effectChecked) => {
   if (effectChecked.value !== `none`) {
     const min = EFFECT_VALUES[effectChecked.value].min;
@@ -49,7 +47,8 @@ const getEffectIntensity = (effectChecked) => {
   }
 };
 
-const onSliderPinMouseDown = (evt) => {
+// const onSliderPinMouseDown = (evt) => {
+effectLevelPin.addEventListener(`mousedown`, (evt) => {
   evt.preventDefault();
 
   let startCoordX = evt.clientX;
@@ -82,12 +81,11 @@ const onSliderPinMouseDown = (evt) => {
 
   document.addEventListener(`mousemove`, onSliderPinMouseMove);
   document.addEventListener(`mouseup`, onSliderPinMouseUp);
-};
+});
 
 window.slider = {
   effectLevelValue,
   effectLevelPin,
   effectLevelDepth,
-  onSliderPinMouseDown
+  // onSliderPinMouseDown
 };
-

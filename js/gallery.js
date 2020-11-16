@@ -1,5 +1,6 @@
 'use strict';
 
+const COMMENTS_INDEX_STEP = 5;
 const photosContainer = document.querySelector(`.pictures`);
 const photosTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 let pictures = [];
@@ -9,7 +10,6 @@ const commentsList = document.querySelector(`.social__comments`);
 const commentsItem = commentsList.querySelector(`.social__comment`);
 const commentsLoader = document.querySelector(`.comments-loader`);
 let currentComments = [];
-const COMMENTS_INDEX_STEP = 5;
 
 const createPhoto = (photo) => {
   const photoElement = photosTemplate.cloneNode(true);
@@ -21,6 +21,8 @@ const createPhoto = (photo) => {
   return photoElement;
 };
 
+const photosMap = new Map();
+
 const createPicturesList = (photos) => {
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
@@ -29,17 +31,22 @@ const createPicturesList = (photos) => {
     const createdPhoto = createPhoto(photo);
     fragment.appendChild(createdPhoto);
 
-    createdPhoto.addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      openBigPhoto(photo);
-    });
+    photosMap.set(createdPhoto, photo);
 
-    createdPhoto.addEventListener(`keydown`, (evt) => {
+    const onCreatedPhotoClick = (evt) => {
+      evt.preventDefault();
+      openBigPhoto(photo); // openBigPhoto(photosMap.set(createdPhoto));
+    };
+
+    const onCreatedPhotoKeydown = (evt) => {
       if (evt.key === `Enter`) {
         evt.preventDefault();
-        openBigPhoto(photo);
+        openBigPhoto(photo); // openBigPhoto(photosMap.set(createdPhoto));
       }
-    });
+    };
+
+    createdPhoto.addEventListener(`click`, onCreatedPhotoClick);
+    createdPhoto.addEventListener(`keydown`, onCreatedPhotoKeydown);
   }
 
   return fragment;
