@@ -11,6 +11,8 @@ const commentsItem = commentsList.querySelector(`.social__comment`);
 const commentsLoader = document.querySelector(`.comments-loader`);
 let currentComments = [];
 
+const photosMap = new Map();
+
 const createPhoto = (photo) => {
   const photoElement = photosTemplate.cloneNode(true);
 
@@ -21,9 +23,21 @@ const createPhoto = (photo) => {
   return photoElement;
 };
 
-const photosMap = new Map();
+const onCreatedPhotoClick = (evt) => {
+  evt.preventDefault();
+  openBigPhoto(photosMap.get(evt.target.parentNode));
+};
+
+const onCreatedPhotoKeydown = (evt) => {
+  if (evt.key === `Enter`) {
+    evt.preventDefault();
+    openBigPhoto(photosMap.get(evt.target));
+  }
+};
 
 const createPicturesList = (photos) => {
+  photosMap.clear();
+
   const fragment = document.createDocumentFragment();
   for (let i = 0; i < photos.length; i++) {
     const photo = photos[i];
@@ -32,18 +46,6 @@ const createPicturesList = (photos) => {
     fragment.appendChild(createdPhoto);
 
     photosMap.set(createdPhoto, photo);
-
-    const onCreatedPhotoClick = (evt) => {
-      evt.preventDefault();
-      openBigPhoto(photo); // openBigPhoto(photosMap.set(createdPhoto));
-    };
-
-    const onCreatedPhotoKeydown = (evt) => {
-      if (evt.key === `Enter`) {
-        evt.preventDefault();
-        openBigPhoto(photo); // openBigPhoto(photosMap.set(createdPhoto));
-      }
-    };
 
     createdPhoto.addEventListener(`click`, onCreatedPhotoClick);
     createdPhoto.addEventListener(`keydown`, onCreatedPhotoKeydown);
@@ -144,10 +146,16 @@ const renderPhotos = (photos) => {
   photosContainer.append(createPicturesList(photos));
 };
 
-const removePictures = () => document.querySelectorAll(`.picture`).forEach((photo) => photo.remove());
+const removePictures = () => {
+  [...photosMap.keys()].forEach((photo) => {
+    photo.removeEventListener(`click`, onCreatedPhotoClick);
+    photo.removeEventListener(`keydown`, onCreatedPhotoKeydown);
+    photo.remove();
+  });
+};
 
 window.gallery = {
   getPictures: () => pictures.slice(),
   renderPhotos,
-  closeBigPhoto,
+  closeBigPhoto
 };

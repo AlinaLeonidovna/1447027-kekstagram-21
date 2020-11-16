@@ -47,8 +47,7 @@ const getEffectIntensity = (effectChecked) => {
   }
 };
 
-// const onSliderPinMouseDown = (evt) => {
-effectLevelPin.addEventListener(`mousedown`, (evt) => {
+const onSliderPinMouseDown = (evt) => {
   evt.preventDefault();
 
   let startCoordX = evt.clientX;
@@ -81,11 +80,11 @@ effectLevelPin.addEventListener(`mousedown`, (evt) => {
 
   document.addEventListener(`mousemove`, onSliderPinMouseMove);
   document.addEventListener(`mouseup`, onSliderPinMouseUp);
-});
+};
 
 window.slider = {
   effectLevelValue,
   effectLevelPin,
   effectLevelDepth,
-  // onSliderPinMouseDown
+  onSliderPinMouseDown
 };
