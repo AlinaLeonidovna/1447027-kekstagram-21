@@ -1,5 +1,6 @@
 'use strict';
 
+const COMMENTS_INDEX_STEP = 5;
 const photosContainer = document.querySelector(`.pictures`);
 const photosTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 let pictures = [];
@@ -9,7 +10,6 @@ const commentsList = document.querySelector(`.social__comments`);
 const commentsItem = commentsList.querySelector(`.social__comment`);
 const commentsLoader = document.querySelector(`.comments-loader`);
 let currentComments = [];
-const COMMENTS_INDEX_STEP = 5;
 
 const createPhoto = (photo) => {
   const photoElement = photosTemplate.cloneNode(true);

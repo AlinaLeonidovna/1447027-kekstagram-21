@@ -51,4 +51,6 @@ const onUploadFormImgSubmit = (evt) => {
   closeEditFormImg();
 };
 
-window.form = closeEditFormImg;
+window.form = {
+  closeEditFormImg
+};
