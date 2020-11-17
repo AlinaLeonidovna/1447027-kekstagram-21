@@ -18,6 +18,7 @@ const StatusCode = {
 };
 
 const TIMEOUT_IN_MS = 10000;
+const ZET_INDEX = 100;
 
 const messageSuccessTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 const messageErrorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
@@ -92,6 +93,8 @@ const errorHandler = (errorMessage) => {
 
 const renderMessage = (message, type) => {
   sectionMain.appendChild(message);
+  const popup = sectionMain.querySelector(`.${type}`);
+  popup.style.zIndex = ZET_INDEX;
 
   const closeButtonMessage = sectionMain.querySelector(`.${type}__button`);
 
@@ -126,6 +129,7 @@ const showMessageSuccess = () => {
   messageSuccess.querySelector(`h2`).textContent = `Изображение успешно загружено`;
   messageSuccess.querySelector(`button`).textContent = `Круто!`;
   renderMessage(messageSuccess, `success`);
+  window.form.closeEditFormImg();
 };
 
 const showMessagError = () => {

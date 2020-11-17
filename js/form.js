@@ -48,7 +48,6 @@ uploadInputImg.addEventListener(`change`, (evt) => {
 const onUploadFormImgSubmit = (evt) => {
   evt.preventDefault();
   window.backend.send(new FormData(window.editor.uploadFormImg), window.backend.showMessageSuccess, window.backend.showMessagError);
-  closeEditFormImg();
 };
 
 window.form = {
