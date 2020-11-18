@@ -33,6 +33,7 @@ const effectLevelValue = effectBar.querySelector(`.effect-level__value`);
 const effectLevelLine = effectBar.querySelector(`.effect-level__line`);
 const effectLevelPin = effectBar.querySelector(`.effect-level__pin`);
 const effectLevelDepth = effectBar.querySelector(`.effect-level__depth`);
+let startCoordX;
 
 const getEffectIntensity = (effectChecked) => {
   if (effectChecked.value !== `none`) {
@@ -47,36 +48,35 @@ const getEffectIntensity = (effectChecked) => {
   }
 };
 
+const onSliderPinMouseMove = (moveEvt) => {
+  moveEvt.preventDefault();
+  const shiftX = startCoordX - moveEvt.clientX;
+  startCoordX = moveEvt.clientX;
+
+  const currentPositionPin = effectLevelPin.offsetLeft - shiftX;
+
+  const widthEffectLevelLine = effectLevelLine.offsetWidth;
+
+  if (!(currentPositionPin < 0 || currentPositionPin > widthEffectLevelLine)) {
+    const newPositionPin = currentPositionPin * 100 / widthEffectLevelLine;
+    effectLevelPin.style.left = `${currentPositionPin}px`;
+    effectLevelValue.setAttribute(`value`, Math.round(newPositionPin));
+    effectLevelDepth.style.width = `${Math.round(newPositionPin)}%`;
+
+    const effectChecked = document.querySelector(`input[name=effect]:checked`);
+    getEffectIntensity(effectChecked);
+  }
+};
+
+const onSliderPinMouseUp = function (upEvt) {
+  upEvt.preventDefault();
+  document.removeEventListener(`mousemove`, onSliderPinMouseMove);
+  document.removeEventListener(`mouseup`, onSliderPinMouseUp);
+};
+
 const onSliderPinMouseDown = (evt) => {
   evt.preventDefault();
-
-  let startCoordX = evt.clientX;
-
-  const onSliderPinMouseMove = (moveEvt) => {
-    moveEvt.preventDefault();
-    const shiftX = startCoordX - moveEvt.clientX;
-    startCoordX = moveEvt.clientX;
-
-    const currentPositionPin = effectLevelPin.offsetLeft - shiftX;
-
-    const widthEffectLevelLine = effectLevelLine.offsetWidth;
-
-    if (!(currentPositionPin < 0 || currentPositionPin > widthEffectLevelLine)) {
-      const newPositionPin = currentPositionPin * 100 / widthEffectLevelLine;
-      effectLevelPin.style.left = `${currentPositionPin}px`;
-      effectLevelValue.setAttribute(`value`, Math.round(newPositionPin));
-      effectLevelDepth.style.width = `${Math.round(newPositionPin)}%`;
-
-      const effectChecked = document.querySelector(`input[name=effect]:checked`);
-      getEffectIntensity(effectChecked);
-    }
-  };
-
-  const onSliderPinMouseUp = function (upEvt) {
-    upEvt.preventDefault();
-    document.removeEventListener(`mousemove`, onSliderPinMouseMove);
-    document.removeEventListener(`mouseup`, onSliderPinMouseUp);
-  };
+  startCoordX = evt.clientX;
 
   document.addEventListener(`mousemove`, onSliderPinMouseMove);
   document.addEventListener(`mouseup`, onSliderPinMouseUp);
