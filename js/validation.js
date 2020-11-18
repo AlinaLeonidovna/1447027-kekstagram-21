@@ -38,11 +38,7 @@ const getResultValidation = (hashtagsArray) => {
     hashtagsInput.setCustomValidity(`Нельзя указать больше ${HashtagsParameters.MAX_QUANTITY} хэш-тегов`);
   }
 
-  if (!hashtagsInput.validity.valid) {
-    hashtagsInput.style.outlineColor = `red`;
-  } else {
-    hashtagsInput.style.outlineColor = `highlight`;
-  }
+  hashtagsInput.style.outlineColor = (!hashtagsInput.validity.valid) ? `red` : `highlight`;
 };
 
 const onHashtagsInput = (evt) => {
@@ -69,11 +65,7 @@ const onCommentInput = (evt) => {
 
   commentInput.reportValidity();
 
-  if (!commentInput.validity.valid) {
-    commentInput.style.outlineColor = `red`;
-  } else {
-    commentInput.style.outlineColor = `highlight`;
-  }
+  commentInput.style.outlineColor = (!commentInput.validity.valid) ? `red` : `highlight`;
 };
 
 commentInput.addEventListener(`focus`, () => {
